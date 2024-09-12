@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: payments
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ifood-clone?createDatabaseIfNotExist=true
+    username: user
+    password: user
+  jpa:
+    show-sql: true
