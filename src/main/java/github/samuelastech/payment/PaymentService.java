@@ -1,5 +1,6 @@
 package github.samuelastech.payment;
 
+import github.samuelastech.order.OrderClient;
 import github.samuelastech.payment.dtos.PaymentDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -15,6 +16,9 @@ public class PaymentService {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private OrderClient order;
 
     public Page<PaymentDTO> getAll(Pageable paging) {
         return repository
@@ -47,9 +51,18 @@ public class PaymentService {
         repository.deleteById(id);
     }
 
-    public void updateStatus(Long id) {
+    public void confirmPaymentWithoutIntegration(Long id) {
+        updateStatusAndSave(id, PaymentStatus.CONFIRMED_WITHOUT_INTEGRATION);
+    }
+
+    public void confirmPayment(Long id) {
+        updateStatusAndSave(id, PaymentStatus.CONFIRMED);
+        order.updatePayment(id);
+    }
+
+    private void updateStatusAndSave(Long id, PaymentStatus status) {
         Payment payment = repository.findById(id).orElseThrow();
-        payment.setStatus(PaymentStatus.CONFIRMED_WITHOUT_INTEGRATION);
+        payment.setStatus(status);
         repository.save(payment);
     }
 }
