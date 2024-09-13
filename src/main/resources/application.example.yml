@@ -3,7 +3,7 @@ spring:
     name: payments
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ifood-clone?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/payments?createDatabaseIfNotExist=true
     username: root
     password: 4149
   jpa:
@@ -11,8 +11,12 @@ spring:
 
 eureka:
   client:
+    register-with-eureka: true
+    fetch-registry: true
     serviceUrl:
       defaultZone: http://localhost:8081/eureka/
+  instance:
+    prefer-ip-address: true
 
 server:
   port: 0
