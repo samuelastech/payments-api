@@ -46,4 +46,10 @@ public class PaymentService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    public void updateStatus(Long id) {
+        Payment payment = repository.findById(id).orElseThrow();
+        payment.setStatus(PaymentStatus.CONFIRMED_WITHOUT_INTEGRATION);
+        repository.save(payment);
+    }
 }

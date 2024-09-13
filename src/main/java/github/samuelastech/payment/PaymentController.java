@@ -1,6 +1,7 @@
 package github.samuelastech.payment;
 
 import github.samuelastech.payment.dtos.PaymentDTO;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,5 +46,15 @@ public class PaymentController {
     public ResponseEntity<PaymentDTO> delete(@PathVariable @NotNull Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/confirm")
+    @CircuitBreaker(name = "updateOrder", fallbackMethod = "authorizedPaymentWithPendentIntegration")
+    public void confirmPayment(@PathVariable @NotNull Long id) {
+        service.confirmPayment(id);
+    }
+
+    public void authorizedPaymentWithPendentIntegration(Long id, Exception e) {
+        service.updateStatus(id);
     }
 }
